@@ -1,7 +1,3 @@
-[build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "mlx-audio"
 dynamic = ["version"]
@@ -15,89 +11,92 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.14"
 
 # Core dependencies
 dependencies = [
-    "mlx>=0.25.2",
-    "numpy>=1.26.4",
-    "huggingface_hub>=0.27.0",
-    "transformers==5.0.0rc3",
-    "mlx-lm==0.30.5",
-    "tqdm>=4.67.1",
-    "sounddevice==0.5.3",
+    "mlx>=0.30.6",
+    "numpy>=2.3",
+    "huggingface_hub>=1.4.1",
+    "transformers==5.2",
+    "mlx-lm==0.30.7",
+    "tqdm>=4.67.3",
+    "sounddevice==0.5.5",
     "miniaudio>=1.61",
     "pyloudnorm>=0.2.0",
-    "numba>=0.60.0", # Required by librosa
+    "numba>=0.63.1", # Required by librosa
     "librosa==0.11.0",
     "protobuf>=6.33.5",
+    "setuptools", # Required by webrtcvad for pkg_resources
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 # STT dependencies
 stt = [
-    "tiktoken>=0.9.0",
-    "mistral-common[audio]",
+    "tiktoken>=0.12.0",
+    "mistral-common[audio]>=1.9.1",
 ]
 
 # TTS dependencies
 tts = [
     "misaki>=0.9.4",
     "num2words>=0.5.14",
-    "spacy>=3.8.4",
+    "spacy>=3.8.11",
     "phonemizer-fork>=3.3.2",
     "espeakng-loader>=0.2.4",
-    "sentencepiece>=0.2.0",
+    "sentencepiece>=0.2.1",
 ]
 
 # Server dependencies
 server = [
-    "fastapi>=0.95.0",
-    "uvicorn>=0.22.0",
+    "fastapi>=0.129.0",
+    "uvicorn>=0.41.0",
     "python-multipart>=0.0.22"
 ]
 
 # STS (Speech-to-Speech) requires both STT and TTS + additional deps
 sts = [
-    "tiktoken>=0.9.0",
-    "mistral-common[audio]",
+    "tiktoken>=0.12.0",
+    "mistral-common[audio]>=1.9.1",
 
     "misaki>=0.9.4",
     "num2words>=0.5.14",
-    "spacy>=3.8.4",
+    "spacy>=3.8.11",
     "phonemizer-fork>=3.3.2",
     "espeakng-loader>=0.2.4",
-    "sentencepiece>=0.2.0",
-    
-    "webrtcvad>=2.0.10",
+    "sentencepiece>=0.2.1",
+    "webrtcvad",
 ]
 
 # Full installation (all features)
 all = [
-    "tiktoken>=0.9.0",
-    "mistral-common[audio]",
+    "tiktoken>=0.12.0",
+    "mistral-common[audio]>=1.9.1",
 
     "misaki>=0.9.4",
     "num2words>=0.5.14",
-    "spacy>=3.8.4",
+    "spacy>=3.8.11",
     "phonemizer-fork>=3.3.2",
     "espeakng-loader>=0.2.4",
-    "sentencepiece>=0.2.0",
+    "sentencepiece>=0.2.1",
 
-    "fastapi>=0.95.0",
-    "uvicorn>=0.22.0",
+    "fastapi>=0.129.0",
+    "uvicorn>=0.41.0",
 
-    "webrtcvad>=2.0.10",
+    "webrtcvad",
 ]
 
 # Development dependencies
 dev = [
-    "pytest>=7.0.0",
-    "pytest-asyncio>=1.0.0",
-    "black>=24.2.0",
-    "isort>=5.13.2",
-    "pre-commit>=3.7.0",
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "pre-commit>=4.5.1",
 ]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 
 [project.scripts]
 "mlx_audio.convert" = "mlx_audio.convert:main"
@@ -105,12 +104,12 @@ dev = [
 "mlx_audio.tts.generate" = "mlx_audio.tts.generate:main"
 "mlx_audio.server" = "mlx_audio.server:main"
 
+[tool.uv.sources]
+webrtcvad = { git = "https://github.com/mkubasz/py-webrtcvad" }
+
 [project.urls]
 Homepage = "https://github.com/Blaizzy/mlx-audio"
 Repository = "https://github.com/Blaizzy/mlx-audio"
-
-[tool.poetry]
-version = "0.0.0"
 
 [tool.setuptools.dynamic]
 version = {attr = "mlx_audio.version.__version__"}
@@ -131,9 +130,14 @@ mlx_audio = [
     "tts/static/**/*",
 ]
 
-[tool.black]
-line-length = 88
-target-version = ["py310"]
+[tool.ruff]
+line-length = 99
+src = ["src"]
+include = ["pyproject.toml", "src/**/*.py"]
 
-[tool.isort]
-profile = "black"
+[tool.ruff.lint]
+extend-select = ["I"]  # Add import sorting
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+force-sort-within-sections = true
