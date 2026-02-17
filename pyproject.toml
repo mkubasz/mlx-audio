@@ -16,7 +16,7 @@ requires-python = ">=3.14"
 # Core dependencies
 dependencies = [
     "mlx>=0.30.6",
-    "numpy>=2.3",
+    "numpy>=2.4.2",
     "huggingface_hub>=1.4.1",
     "transformers==5.2",
     "mlx-lm==0.30.7",

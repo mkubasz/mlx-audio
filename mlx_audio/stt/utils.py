@@ -5,7 +5,15 @@ import mlx.core as mx
 import mlx.nn as nn
 import numpy as np
 
-from mlx_audio.utils import base_load_model
+from mlx_audio.utils import (
+    base_load_model,
+)
+from mlx_audio.utils import (
+    get_model_path as _utils_get_model_path,
+)
+from mlx_audio.utils import (
+    load_config as _utils_load_config,
+)
 
 SAMPLE_RATE = 16000
 
@@ -17,6 +25,18 @@ MODEL_REMAPPING = {
     "qwen3": "qwen3_asr",
     "qwen3_asr": "qwen3_asr",
 }
+
+
+def get_model_path(
+    path_or_hf_repo: str, revision: Optional[str] = None, force_download: bool = False
+) -> Path:
+    """Backward-compatible shim for STT model modules importing from stt.utils."""
+    return _utils_get_model_path(path_or_hf_repo, revision=revision, force_download=force_download)
+
+
+def load_config(model_path: Union[str, Path]) -> dict:
+    """Backward-compatible shim for modules importing load_config from stt.utils."""
+    return _utils_load_config(model_path)
 
 
 def resample_audio(audio: np.ndarray, orig_sr: int, target_sr: int) -> np.ndarray:
