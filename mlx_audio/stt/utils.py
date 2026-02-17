@@ -5,7 +5,7 @@ import mlx.core as mx
 import mlx.nn as nn
 import numpy as np
 
-from mlx_audio.utils import base_load_model, get_model_path, load_config
+from mlx_audio.utils import base_load_model
 
 SAMPLE_RATE = 16000
 
@@ -14,6 +14,7 @@ MODEL_REMAPPING = {
     "voxtral": "voxtral",
     "voxtral_realtime": "voxtral_realtime",
     "vibevoice": "vibevoice_asr",
+    "qwen3": "qwen3_asr",
     "qwen3_asr": "qwen3_asr",
 }
 
